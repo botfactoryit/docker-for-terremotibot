@@ -1,6 +1,7 @@
-FROM ubuntu:18.04
-LABEL mantainer Francesco Tonini <francescoantoniotonini@gmail.com>
-ENV REFRESHED_AT 2019-08-26
+FROM ubuntu:20.04
+ENV REFRESHED_AT 2021-07-11
+
+ARG DEBIAN_FRONTEND=noninteractive
 
 # Add build stuff
 RUN apt-get update && apt-get install -y autoconf automake build-essential curl \
@@ -8,7 +9,7 @@ RUN apt-get update && apt-get install -y autoconf automake build-essential curl 
     software-properties-common
 
 # Install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt-get install -y nodejs
 
 # Compile GraphicsMagick
@@ -21,11 +22,11 @@ RUN cd /tmp && curl -sL https://www.johnvansickle.com/ffmpeg/old-releases/ffmpeg
 
 # Install and compile vapoursynth build deps
 RUN cd /tmp && pip3 install cython \
-    && curl -sL https://github.com/sekrit-twc/zimg/archive/release-2.9.2.tar.gz | tar xz \
-    && cd zimg-release-2.9.2 \
+    && curl -sL https://github.com/sekrit-twc/zimg/archive/release-3.0.2.tar.gz | tar xz \
+    && cd zimg-release-3.0.2 \
     && ./autogen.sh && ./configure && make install \
     && cd /tmp && curl -sL https://www.imagemagick.org/download/ImageMagick.tar.gz | tar xz \
-    && cd ImageMagick-7.0.8-62/ && ./configure && make \
+    && cd ImageMagick-7.1.0-2/ && ./configure && make \
     && make install && ldconfig /usr/local/lib
 
 # Compile vapoursynth
